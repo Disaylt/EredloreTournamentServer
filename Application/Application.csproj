@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Game\Features\Battle\Interfaces\" />
+  </ItemGroup>
+
 </Project>

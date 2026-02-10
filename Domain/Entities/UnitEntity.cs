@@ -6,31 +6,24 @@ namespace Domain.Entities;
 
 public sealed class UnitEntity : IEntity
 {
-    public string Id { get; private set; }
-    public string UnitId { get; private set; }
+    public string Id { get; private set; } = Guid.NewGuid().ToString();
+    public string UnitId { get; init; }
     public int Level { get; private set; }
+    public bool CanSell { get; init; }
 
     public List<AbilityValueObject> Abilities { get; private set; } = [];
 
-    public string UserId { get; private set; } = null!;
-    public UserEntity User { get; private set; } = null!;
+    public string UserId { get; init; } = null!;
+    public CollectionEntity UserCollection { get; init; } = null!;
 
-    protected UnitEntity()
+    protected UnitEntity() { }
+
+    public UnitEntity(CollectionEntity userCollection) : this()
     {
-        Id = Guid.NewGuid().ToString();
+        UserCollection = userCollection;
     }
 
-    public UnitEntity(string unitId) : this()
-    {
-        UnitId = unitId;
-    }
-
-    public UnitEntity(UserEntity user, string unitId) : this(unitId)
-    {
-        User = user;
-    }
-
-    public UnitEntity(string userId, string unitId) : this(unitId)
+    public UnitEntity(string userId) : this()
     {
         UserId = userId;
     }

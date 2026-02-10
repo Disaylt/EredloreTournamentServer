@@ -1,5 +1,6 @@
 ﻿var builder = WebApplication.CreateBuilder(args);
 
+builder.AddGameConfigs();
 builder.AddServiceDefaults();
 builder.AddConfigurations();
 

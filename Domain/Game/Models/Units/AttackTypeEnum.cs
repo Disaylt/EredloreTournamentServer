@@ -1,4 +1,4 @@
-﻿namespace Domain.Game.Common;
+﻿namespace Domain.Game.Models.Units;
 
 public enum AttackTypeEnum
 {

@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Game\Abilities\" />
+    <Folder Include="Game\Models\Common\" />
   </ItemGroup>
 
 </Project>

@@ -10,14 +10,19 @@ if (builder.Environment.IsDevelopment())
         .WithDataVolume()
         .WithPgAdmin();
 
+    var redis = builder
+        .AddRedis("redis")
+        .WithDataVolume();
+
     var postgresdb = postgres.AddDatabase("datingPostgresqlDb");
 
-    var datingWebApi = builder.AddProject<Projects.WebApi>("webapi")
+    var webApi = builder.AddProject<Projects.WebApi>("webapi")
         .WaitFor(postgresdb)
-        .WithReference(postgresdb);
+        .WithReference(postgresdb)
+        .WithReference(redis);
 
     builder.AddScalarApiReference()
-        .WithApiReference(datingWebApi);
+        .WithApiReference(webApi);
 }
 else
 {

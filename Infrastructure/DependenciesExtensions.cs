@@ -1,7 +1,10 @@
 ﻿using Application.Features.Auth.Models;
 using Application.Features.Auth.Services.Abstraction;
 using Application.Features.Users.Services.Abstraction;
+using Application.Services.Abstraction;
 using Domain.Entities;
+using Domain.Game.Models.Units;
+using Domain.Game.Repositories;
 using Domain.Interfaces;
 using Domain.Repositories;
 using Infrastructure.Database;
@@ -9,9 +12,13 @@ using Infrastructure.Database.Repositories;
 using Infrastructure.Features.Auth.Services.Abstraction;
 using Infrastructure.Features.Auth.Services.Implementation;
 using Infrastructure.Features.Users.Services.Implementation;
+using Infrastructure.Game.Repositories;
 using Infrastructure.Models;
+using Infrastructure.Services.Implementation;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Infrastructure;
 
@@ -27,16 +34,28 @@ public static class DependenciesExtensions
         services.AddSingleton<ITokenService<AccessAuthInfo>, JwtAccessTokenService>();
         services.AddSingleton<IClaimsService<RefreshAuthInfo>, JwtRefreshClaimsService>();
         services.AddSingleton<ITokenService<RefreshAuthInfo>, JwtRefreshTokenService>();
+        services.AddSingleton<IGameUnitRepository, GameUnitRepository>();
 
         services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
         services.AddScoped<ISessionRepository, SessionRepository>();
+        services.AddSingleton<IBattleLockService, BattleLockService>();
 
         return services;
     }
 
+    public static void AddGameConfigs(this IHostApplicationBuilder builder)
+    {
+        builder.Configuration.AddJsonFile("Configs/Game/Units.json",
+            optional: false,
+            reloadOnChange: true);
+
+        builder.Services.Configure<IReadOnlyCollection<UnitDefaultCharacteristic>>(
+            builder.Configuration.GetSection("units"));
+    }
+
     public static IServiceCollection AddDatabase(this IServiceCollection services, ConnectionStringOptions databaseOptions)
     {
-        services.AddNpgsql<AreploreTournamentDbContext>(databaseOptions.DatingPostgresqlDb);
+        services.AddNpgsql<AreploreTournamentDbContext>(databaseOptions.PostgresqlDb);
 
         services.AddIdentityCore<UserEntity>(options =>
         {
@@ -57,6 +76,13 @@ public static class DependenciesExtensions
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ITransactionManager, TransactionManager>();
+        services.AddSingleton<ICacheRepository, CacheRepository>();
+
+        services.AddStackExchangeRedisCache(opt =>
+        {
+            opt.Configuration = databaseOptions.Redis;
+            opt.InstanceName = "Game";
+        });
 
         return services;
     }

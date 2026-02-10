@@ -2,5 +2,6 @@
 
 public sealed record ConnectionStringOptions
 {
-    public string DatingPostgresqlDb { get; init; } = string.Empty;
+    public string Redis { get; init; } = string.Empty;
+    public string PostgresqlDb { get; init; } = string.Empty;
 }
