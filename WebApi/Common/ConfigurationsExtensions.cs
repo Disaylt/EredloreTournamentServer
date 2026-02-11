@@ -1,6 +1,4 @@
 ﻿using Infrastructure.Models;
-using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.VisualBasic;
 
 namespace WebApi.Common;
 

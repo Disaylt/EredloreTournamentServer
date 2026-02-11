@@ -39,7 +39,7 @@ public class CreateBattleCommandHandler(
             UserIdSelectingUnits = battleEntity.BotUserId,
         };
 
-        await cacheRepository.SetAsync(battleEntity.Id, battleContext, null, cancellationToken);
+        await cacheRepository.SetAsync(battleEntity.Id, battleContext, TimeSpan.FromHours(2), cancellationToken);
 
         return battleEntity.Id;
     }

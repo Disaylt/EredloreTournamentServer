@@ -14,12 +14,16 @@ if (builder.Environment.IsDevelopment())
         .AddRedis("redis")
         .WithDataVolume();
 
-    var postgresdb = postgres.AddDatabase("datingPostgresqlDb");
+    var postgresdb = postgres.AddDatabase("gamePostgresqlDb");
 
-    var webApi = builder.AddProject<Projects.WebApi>("webapi")
+    var configPathSettings = builder.AddParameter("ApplicationConfigsPath", secret: true);
+
+    var webApi = builder
+        .AddProject<Projects.WebApi>("webapi")
         .WaitFor(postgresdb)
         .WithReference(postgresdb)
-        .WithReference(redis);
+        .WithReference(redis)
+        .WithEnvironment("ApplicationConfigsPath", configPathSettings);
 
     builder.AddScalarApiReference()
         .WithApiReference(webApi);

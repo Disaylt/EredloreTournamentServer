@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Infrastructure.Database.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,9 +13,15 @@ public class AreploreTournamentDbContext : IdentityDbContext<UserEntity>
     }
 
     public DbSet<SessionEntity> Sessions { get; set; } = null!;
+    public DbSet<BattleEntity> Battles { get; set; } = null!;
+    public DbSet<CollectionEntity> Collectons { get; set; } = null!;
+    public DbSet<UnitEntity> Units { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new BattleEfConfiguration());
+        modelBuilder.ApplyConfiguration(new CollectionEfConfiguration());
+
         base.OnModelCreating(modelBuilder);
     }
 }

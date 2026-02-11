@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Configs/">
+    <File Path="Configs/Units.json" />
+  </Folder>
   <Project Path="Application/Application.csproj" />
   <Project Path="AreploreTournamentServer.AppHost/AreploreTournamentServer.AppHost.csproj" />
   <Project Path="AreploreTournamentServer.ServiceDefaults/AreploreTournamentServer.ServiceDefaults.csproj" />

@@ -26,6 +26,13 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
+<ItemGroup>
+	<Content Include="Configs\**\*">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	</Content>
+</ItemGroup>
+	
   <ItemGroup>
     <Folder Include="SignalR\" />
   </ItemGroup>

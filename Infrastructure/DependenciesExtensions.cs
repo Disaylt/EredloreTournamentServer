@@ -1,6 +1,7 @@
 ﻿using Application.Features.Auth.Models;
 using Application.Features.Auth.Services.Abstraction;
 using Application.Features.Users.Services.Abstraction;
+using Application.Game.Services;
 using Application.Services.Abstraction;
 using Domain.Entities;
 using Domain.Game.Models.Units;
@@ -13,6 +14,7 @@ using Infrastructure.Features.Auth.Services.Abstraction;
 using Infrastructure.Features.Auth.Services.Implementation;
 using Infrastructure.Features.Users.Services.Implementation;
 using Infrastructure.Game.Repositories;
+using Infrastructure.Game.Services;
 using Infrastructure.Models;
 using Infrastructure.Services.Implementation;
 using Microsoft.AspNetCore.Identity;
@@ -40,12 +42,16 @@ public static class DependenciesExtensions
         services.AddScoped<ISessionRepository, SessionRepository>();
         services.AddSingleton<IBattleLockService, BattleLockService>();
 
+        services.AddScoped<IUnitEntityService, UnitEntityService>();
+
         return services;
     }
 
     public static void AddGameConfigs(this IHostApplicationBuilder builder)
     {
-        builder.Configuration.AddJsonFile("Configs/Game/Units.json",
+        var path = builder.Configuration.GetRequiredSection("ApplicationConfigsPath").Get<string>();
+
+        builder.Configuration.AddJsonFile($"{path}Units.json",
             optional: false,
             reloadOnChange: true);
 
@@ -55,7 +61,7 @@ public static class DependenciesExtensions
 
     public static IServiceCollection AddDatabase(this IServiceCollection services, ConnectionStringOptions databaseOptions)
     {
-        services.AddNpgsql<AreploreTournamentDbContext>(databaseOptions.PostgresqlDb);
+        services.AddNpgsql<AreploreTournamentDbContext>(databaseOptions.GamePostgresqlDb);
 
         services.AddIdentityCore<UserEntity>(options =>
         {

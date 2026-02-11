@@ -1,7 +1,7 @@
 ﻿using Application.Game.Features.Battle.Helpers.Abstraction;
 using Application.Game.Features.Battle.Models;
 using Application.Game.Models;
-using Application.Game.Sessions;
+using Application.Game.Services;
 using Application.Interfaces;
 using Domain.Game.Models.Battle;
 using MediatR;
@@ -15,11 +15,11 @@ public sealed class SelectUnitsCommandHandler(
     IUnitEntityService unitEntityService)
     : IRequestHandler<SelectUnitsCommand, SelectUnitsCommandResponse>
 {
-    public Task<SelectUnitsCommandResponse> Handle(SelectUnitsCommand request, CancellationToken cancellationToken)
+    public async Task<SelectUnitsCommandResponse> Handle(SelectUnitsCommand request, CancellationToken cancellationToken)
     {
         var filter = CreateFilter(request);
 
-        var units = unitEntityService.GetRangeAsync(filter, cancellationToken);
+        var units = await unitEntityService.GetRangeAsync(filter, cancellationToken);
 
         if (units.Count != request.UnitIds.Count) throw new ArgumentException();
 
@@ -51,12 +51,10 @@ public sealed class SelectUnitsCommandHandler(
                 : battlefield.TopUser.UserId;
         }
 
-        var response = new SelectUnitsCommandResponse
+        return new SelectUnitsCommandResponse
         {
             UserIdSelectingUnits = battlefield.UserIdSelectingUnits
         };
-
-        return Task.FromResult(response);
     }
 
     private UnitEntityFilter CreateFilter(SelectUnitsCommand request)
