@@ -21,6 +21,8 @@ public class AreploreTournamentDbContext : IdentityDbContext<UserEntity>
     {
         modelBuilder.ApplyConfiguration(new BattleEfConfiguration());
         modelBuilder.ApplyConfiguration(new CollectionEfConfiguration());
+        modelBuilder.ApplyConfiguration(new UnitEfConfiguration());
+        modelBuilder.ApplyConfiguration(new UserResourcesEfConfiguration());
 
         base.OnModelCreating(modelBuilder);
     }

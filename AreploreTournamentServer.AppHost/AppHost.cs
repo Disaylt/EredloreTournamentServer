@@ -25,6 +25,13 @@ if (builder.Environment.IsDevelopment())
         .WithReference(redis)
         .WithEnvironment("ApplicationConfigsPath", configPathSettings);
 
+    var webSocetApplication = builder
+        .AddProject<Projects.WebSocetApplication>("websocetapplication")
+        .WaitFor(postgresdb)
+        .WithReference(postgresdb)
+        .WithReference(redis)
+        .WithEnvironment("ApplicationConfigsPath", configPathSettings);
+
     builder.AddScalarApiReference()
         .WithApiReference(webApi);
 }

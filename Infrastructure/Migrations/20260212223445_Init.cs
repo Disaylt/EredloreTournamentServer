@@ -191,10 +191,10 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "text", nullable: false),
-                    CommonDust = table.Column<int>(type: "integer", nullable: false),
-                    RareDust = table.Column<int>(type: "integer", nullable: false),
-                    EpicDust = table.Column<int>(type: "integer", nullable: false),
-                    LegendaryDust = table.Column<int>(type: "integer", nullable: false)
+                    CommonSoul = table.Column<int>(type: "integer", nullable: false),
+                    RareSoul = table.Column<int>(type: "integer", nullable: false),
+                    EpicSoul = table.Column<int>(type: "integer", nullable: false),
+                    LegendarySoul = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -230,6 +230,25 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserResourcesEntity",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    NumGold = table.Column<int>(type: "integer", nullable: false),
+                    NumSilver = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserResourcesEntity", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_UserResourcesEntity_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Units",
                 columns: table => new
                 {
@@ -237,42 +256,19 @@ namespace Infrastructure.Migrations
                     UnitId = table.Column<string>(type: "text", nullable: false),
                     Level = table.Column<int>(type: "integer", nullable: false),
                     CanSell = table.Column<bool>(type: "boolean", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    UserCollectionUserId = table.Column<string>(type: "text", nullable: false)
+                    UserCollectionId = table.Column<string>(type: "text", nullable: false),
+                    Abilities = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Units", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Units_Collectons_UserCollectionUserId",
-                        column: x => x.UserCollectionUserId,
+                        name: "FK_Units_Collectons_UserCollectionId",
+                        column: x => x.UserCollectionId,
                         principalTable: "Collectons",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "AbilityValueObject",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Level = table.Column<int>(type: "integer", nullable: false),
-                    UnitEntityId = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AbilityValueObject", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AbilityValueObject_Units_UnitEntityId",
-                        column: x => x.UnitEntityId,
-                        principalTable: "Units",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AbilityValueObject_UnitEntityId",
-                table: "AbilityValueObject",
-                column: "UnitEntityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -327,17 +323,14 @@ namespace Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Units_UserCollectionUserId",
+                name: "IX_Units_UserCollectionId",
                 table: "Units",
-                column: "UserCollectionUserId");
+                column: "UserCollectionId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AbilityValueObject");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -361,6 +354,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Units");
+
+            migrationBuilder.DropTable(
+                name: "UserResourcesEntity");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

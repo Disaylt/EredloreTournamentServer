@@ -20,7 +20,7 @@ public sealed class UnitEntityService(AreploreTournamentDbContext dbContext)
 
         if (filter.UserId is not null)
         {
-            query = query.Where(x => x.UserId == filter.UserId);
+            query = query.Where(x => x.UserCollectionId == filter.UserId);
         }
 
         return await query.ToListAsync(cancellationToken);

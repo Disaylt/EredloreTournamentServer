@@ -1,0 +1,6 @@
+@WebSocetApplication_HostAddress = http://localhost:5166
+
+GET {{WebSocetApplication_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

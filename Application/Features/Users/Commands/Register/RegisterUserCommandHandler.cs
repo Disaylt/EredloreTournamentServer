@@ -2,6 +2,7 @@
 using Application.Features.Auth.Models;
 using Application.Features.Users.Services.Abstraction;
 using Domain.Entities;
+using Domain.Events;
 using Domain.Interfaces;
 using MediatR;
 
@@ -15,7 +16,7 @@ public sealed class RegisterUserCommandHandler(
 {
     public async Task<AuthInfoDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await userService.CreateAsync(request.Email, request.Password);
+        var user = await userService.CreateAsync(request.Email, request.UserName, request.Password);
 
         var session = new SessionEntity(user);
 
@@ -29,6 +30,9 @@ public sealed class RegisterUserCommandHandler(
 
         session.SetNewRefreshToken(authInfo.RefreshToken);
         sessionRepositoryBase.Add(session);
+
+        var userCreatedEvent = new UserCreatedDomainEvent(user);
+        await mediator.Publish(userCreatedEvent, cancellationToken);
 
         return authInfo;
     }

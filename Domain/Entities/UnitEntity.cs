@@ -7,16 +7,16 @@ namespace Domain.Entities;
 public sealed class UnitEntity : IEntity
 {
     public string Id { get; private set; } = Guid.NewGuid().ToString();
-    public string UnitId { get; init; }
-    public int Level { get; private set; }
+    public required string UnitId { get; init; }
+    public int Level { get; private set; } = 1;
     public bool CanSell { get; init; }
 
     public List<AbilityValueObject> Abilities { get; private set; } = [];
 
-    public string UserId { get; init; } = null!;
+    public string UserCollectionId { get; init; } = null!;
     public CollectionEntity UserCollection { get; init; } = null!;
 
-    protected UnitEntity() { }
+    public UnitEntity() { }
 
     public UnitEntity(CollectionEntity userCollection) : this()
     {
@@ -25,7 +25,7 @@ public sealed class UnitEntity : IEntity
 
     public UnitEntity(string userId) : this()
     {
-        UserId = userId;
+        UserCollectionId = userId;
     }
 
     public void UpLevel()

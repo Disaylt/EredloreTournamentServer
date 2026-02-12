@@ -1,5 +1,6 @@
 ﻿using Domain.Game.Models.Units;
 using Domain.Game.Repositories;
+using Infrastructure.Models;
 using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Game.Repositories;
@@ -10,16 +11,15 @@ public class GameUnitRepository : IGameUnitRepository
     private readonly Dictionary<UnitCreateSource, List<UnitDefaultCharacteristic>> _unitsBySource;
     private readonly Dictionary<string, UnitDefaultCharacteristic> _unitsById;
 
-    public GameUnitRepository(IOptions<IReadOnlyCollection<UnitDefaultCharacteristic>> unitsConfig)
+    public GameUnitRepository(IOptions<UnitsCollectionOptions> unitsConfig)
     {
-        _allUnits = unitsConfig.Value;
+        _allUnits = unitsConfig.Value.GetRequired();
 
-        _unitsBySource = unitsConfig
-            .Value
+        _unitsBySource = _allUnits
             .GroupBy(x => x.UnitCreateSource)
             .ToDictionary(x => x.Key, x => x.ToList());
 
-        _unitsById = unitsConfig.Value.ToDictionary(x => x.Id);
+        _unitsById = _allUnits.ToDictionary(x => x.Id);
     }
 
     public IUnitDefaultCharacteristic? Find(string id) => _unitsById.GetValueOrDefault(id);

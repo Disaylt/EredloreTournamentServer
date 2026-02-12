@@ -8,4 +8,5 @@
   <Project Path="Domain/Domain.csproj" />
   <Project Path="Infrastructure/Infrastructure.csproj" />
   <Project Path="WebApi/WebApi.csproj" />
+  <Project Path="WebSocetApplication/WebSocetApplication.csproj" />
 </Solution>

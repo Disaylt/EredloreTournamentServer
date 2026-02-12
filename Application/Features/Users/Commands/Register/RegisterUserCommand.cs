@@ -6,6 +6,7 @@ namespace Application.Features.Users.Commands.Register;
 
 public sealed record RegisterUserCommand : CommandBase<AuthInfoDto>, ITransactionBehaviorSupport
 {
+    public required string UserName { get; init; }
     public required string Email { get; init; }
     public required string Password { get; init; }
 }

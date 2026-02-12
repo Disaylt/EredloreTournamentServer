@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebApi\WebApi.csproj" />
+    <ProjectReference Include="..\WebSocetApplication\WebSocetApplication.csproj" />
   </ItemGroup>
 
 </Project>

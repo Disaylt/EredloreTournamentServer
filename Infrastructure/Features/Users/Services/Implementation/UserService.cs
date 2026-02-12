@@ -9,19 +9,19 @@ namespace Infrastructure.Features.Users.Services.Implementation;
 public sealed class UserService(UserManager<UserEntity> userManager)
     : IUserService
 {
-    public async Task<UserEntity> CreateAsync(string email, string password)
+    public async Task<UserEntity> CreateAsync(string email, string userName, string password)
     {
         var user = new UserEntity
         {
             Email = email,
-            UserName = email
+            UserName = userName
         };
 
         var result = await userManager.CreateAsync(user, password);
 
         if (result.Succeeded is false)
         {
-            throw CreateBadRegisterException();
+            throw CreateBadRegisterException(result);
         }
 
         return user;
@@ -52,10 +52,16 @@ public sealed class UserService(UserManager<UserEntity> userManager)
         return await userManager.CheckPasswordAsync(user, password);
     }
 
-    private static CoreRequestException CreateBadRegisterException()
+    private static CoreRequestException CreateBadRegisterException(IdentityResult identityResult)
     {
-        return new CoreRequestException()
-                .AddMessages(["Не удалось зарегистрировать пользователя."]);
+        var error = new CoreRequestException();
+
+        foreach(var message in identityResult.Errors)
+        {
+            error.AddKeyMessages(message.Code, [message.Description]);
+        }
+
+        return error;
     }
 
     private static CoreRequestException CreateUserNotFoundException()

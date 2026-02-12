@@ -53,10 +53,9 @@ public static class DependenciesExtensions
 
         builder.Configuration.AddJsonFile($"{path}Units.json",
             optional: false,
-            reloadOnChange: true);
+            reloadOnChange: false);
 
-        builder.Services.Configure<IReadOnlyCollection<UnitDefaultCharacteristic>>(
-            builder.Configuration.GetSection("units"));
+        builder.Services.Configure<UnitsCollectionOptions>(builder.Configuration);
     }
 
     public static IServiceCollection AddDatabase(this IServiceCollection services, ConnectionStringOptions databaseOptions)
